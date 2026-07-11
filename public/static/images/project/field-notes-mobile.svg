@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#f4eadb"/>
+  <rect x="565" y="46" width="470" height="808" rx="62" fill="#17130f"/><rect x="583" y="64" width="434" height="772" rx="48" fill="#fffdf8"/>
+  <rect x="720" y="82" width="160" height="24" rx="12" fill="#17130f"/>
+  <text x="632" y="176" fill="#de1d8d" font-family="Arial" font-size="14" letter-spacing="3">FIELD NOTE 04</text><text x="632" y="236" fill="#211b15" font-family="Georgia" font-size="36" font-weight="700">Make room</text><text x="632" y="280" fill="#211b15" font-family="Georgia" font-size="36" font-weight="700">for the idea.</text>
+  <g fill="#aaa092"><rect x="632" y="336" width="320" height="11" rx="6"/><rect x="632" y="370" width="286" height="11" rx="6"/><rect x="632" y="404" width="310" height="11" rx="6"/><rect x="632" y="456" width="300" height="11" rx="6"/><rect x="632" y="490" width="240" height="11" rx="6"/></g>
+  <circle cx="800" cy="690" r="72" fill="#f4e1eb"/><circle cx="800" cy="690" r="28" fill="#de1d8d"/>
+</svg>

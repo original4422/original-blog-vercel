@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" rx="32" fill="#f5f2f4"/><rect x="72" y="72" width="1056" height="486" rx="24" fill="#fff" stroke="#ded7dc"/>
+  <g fill="none" stroke="#171317" stroke-width="4"><rect x="140" y="200" width="230" height="180" rx="20"/><rect x="485" y="200" width="230" height="180" rx="20"/><rect x="830" y="200" width="230" height="180" rx="20"/><path d="M370 290h115M715 290h115"/></g><g fill="#de1d8d"><circle cx="427" cy="290" r="14"/><circle cx="772" cy="290" r="14"/></g>
+  <g fill="#171317" font-family="Arial" font-size="24" font-weight="700"><text x="196" y="300">BOUNDARY</text><text x="548" y="300">STATE</text><text x="888" y="300">PROOF</text></g>
+  <text x="140" y="478" fill="#171317" font-family="Georgia" font-size="42">Constraints make completion observable.</text>
+</svg>

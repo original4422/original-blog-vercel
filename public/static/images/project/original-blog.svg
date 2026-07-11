@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs><linearGradient id="o" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050505"/><stop offset="1" stop-color="#2f0b21"/></linearGradient><radialGradient id="p"><stop stop-color="#ff4ca9"/><stop offset="1" stop-color="#de1d8d" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1600" height="900" rx="36" fill="url(#o)"/>
+  <circle cx="1290" cy="120" r="360" fill="url(#p)" opacity=".78"/><circle cx="230" cy="830" r="320" fill="url(#p)" opacity=".28"/>
+  <text x="110" y="130" fill="#de1d8d" font-family="Arial" font-size="20" letter-spacing="7">PERSONAL DIGITAL GARDEN</text>
+  <text x="110" y="380" fill="#fff" font-family="Georgia" font-size="126" font-weight="700">original</text>
+  <text x="118" y="462" fill="#bcb4ba" font-family="Arial" font-size="34">Blog · Projects · Notes</text>
+  <g fill="none" stroke="#5c3a4d"><rect x="110" y="570" width="270" height="130" rx="22"/><rect x="405" y="570" width="270" height="130" rx="22"/><rect x="700" y="570" width="270" height="130" rx="22"/></g>
+  <g fill="#fff" font-family="Arial" font-size="26"><text x="155" y="645">01 / WRITE</text><text x="450" y="645">02 / BUILD</text><text x="745" y="645">03 / SHARE</text></g>
+</svg>

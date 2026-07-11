@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" rx="32" fill="#08151c"/><text x="76" y="96" fill="#de1d8d" font-family="Arial" font-size="18" letter-spacing="5">ONE PAGE / ATTENTION</text>
+  <g stroke="#274753" stroke-width="3"><path d="M240 260 590 315 950 200M240 315l350 0 360 0M240 370l350-55 360 115"/></g>
+  <g fill="#102832" stroke="#de1d8d" stroke-width="4"><circle cx="240" cy="260" r="48"/><circle cx="240" cy="315" r="48"/><circle cx="240" cy="370" r="48"/><circle cx="590" cy="315" r="92"/><circle cx="950" cy="200" r="52"/><circle cx="950" cy="315" r="52"/><circle cx="950" cy="430" r="52"/></g>
+  <g fill="#fff" font-family="Georgia" font-size="27" text-anchor="middle"><text x="240" y="324">Q</text><text x="590" y="324">QKᵀ</text><text x="950" y="324">V</text></g>
+  <text x="76" y="548" fill="#d7e3e8" font-family="Georgia" font-size="40">Compare · normalize · retrieve</text>
+</svg>

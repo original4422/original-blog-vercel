@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#121012"/>
+  <rect x="96" y="54" width="1408" height="792" rx="30" fill="#1b181b" stroke="#42353d"/>
+  <text x="150" y="134" fill="#de1d8d" font-family="Arial" font-size="20" letter-spacing="6">FOCUS NOTE</text>
+  <text x="150" y="225" fill="#fff" font-family="Georgia" font-size="68" font-weight="700">Ideas become clearer</text>
+  <text x="150" y="300" fill="#fff" font-family="Georgia" font-size="68" font-weight="700">when they can connect.</text>
+  <g fill="#938b91"><rect x="150" y="374" width="890" height="16" rx="8"/><rect x="150" y="416" width="1060" height="16" rx="8"/><rect x="150" y="458" width="970" height="16" rx="8"/><rect x="150" y="500" width="740" height="16" rx="8"/></g>
+  <rect x="150" y="594" width="410" height="142" rx="22" fill="#291521" stroke="#de1d8d"/>
+  <text x="190" y="646" fill="#de1d8d" font-family="Arial" font-size="18">RELATED NOTE</text><text x="190" y="691" fill="#fff" font-family="Arial" font-size="26">Designing a learning loop</text>
+</svg>

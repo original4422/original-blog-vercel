@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" rx="32" fill="#fffaf0"/><text x="80" y="98" fill="#de1d8d" font-family="Arial" font-size="18" letter-spacing="5">DESIGN / INTERFACE</text>
+  <text x="80" y="242" fill="#211b15" font-family="Georgia" font-size="64" font-weight="700">Arrange attention</text><text x="80" y="320" fill="#211b15" font-family="Georgia" font-size="64" font-weight="700">before pixels.</text>
+  <g fill="none" stroke="#cabdaa" stroke-width="3"><rect x="80" y="404" width="260" height="104" rx="18"/><rect x="370" y="404" width="260" height="104" rx="18"/><rect x="660" y="404" width="260" height="104" rx="18"/></g><rect x="950" y="404" width="170" height="104" rx="52" fill="#de1d8d"/>
+  <g fill="#766b5d" font-family="Arial" font-size="18"><text x="118" y="464">IDENTITY</text><text x="408" y="464">CONTENT</text><text x="698" y="464">DETAIL</text></g><text x="1035" y="468" text-anchor="middle" fill="#fff" font-family="Arial" font-size="18">ACTION</text>
+</svg>

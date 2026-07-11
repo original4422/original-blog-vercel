@@ -1,0 +1,48 @@
+---
+title: '约束如何帮助我们做出更清晰的系统'
+publishedAt: '2026-06-18'
+summary: '从边界、失败模式和可验证结果出发，重新理解工程约束的价值。'
+draft: false
+image: '/static/images/blog/constraints.svg'
+tags: [C++, System Design, 工程]
+---
+
+这是一篇示例技术文章，用于检查中文、英文、代码块与特殊字符标签的完整链路。
+
+## 约束不是阻力
+
+没有约束的方案往往看起来无所不能，却很难回答三个具体问题：
+
+- 哪些输入是合法的？
+- 失败之后会留下什么状态？
+- 什么证据可以证明任务真的完成？
+
+明确边界会减少选择，但也会让系统更容易解释、测试和维护。
+
+## 把不变量写进代码
+
+下面的 C++ 示例没有追求复杂算法，只表达一个明确不变量：容量永远不能为负数。
+
+```cpp
+#include <stdexcept>
+
+class Capacity {
+public:
+  explicit Capacity(int value) : value_(value) {
+    if (value < 0) {
+      throw std::invalid_argument("capacity must be non-negative");
+    }
+  }
+
+  int value() const { return value_; }
+
+private:
+  int value_;
+};
+```
+
+## 从结果倒推验证
+
+如果目标是“页面可以公开访问”，本地构建成功只是必要条件。真正的完成证据还包括生产 URL 返回 `200`、关键页面可导航、静态资源加载成功，以及移动端没有明显布局断裂。
+
+约束让“完成”从一种感觉，变成一组可以被复查的事实。

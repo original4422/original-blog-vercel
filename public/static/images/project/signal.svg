@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#eef8fb"/>
+  <rect x="42" y="42" width="1516" height="816" rx="28" fill="#07171d"/>
+  <text x="102" y="124" fill="#fff" font-family="Georgia" font-size="48" font-weight="700">Signal Lab</text><circle cx="1455" cy="105" r="18" fill="#de1d8d"/>
+  <g fill="#0e2933" stroke="#21414c"><rect x="100" y="176" width="314" height="150" rx="20"/><rect x="442" y="176" width="314" height="150" rx="20"/><rect x="784" y="176" width="314" height="150" rx="20"/><rect x="1126" y="176" width="332" height="150" rx="20"/></g>
+  <g fill="#8cabb6" font-family="Arial" font-size="18"><text x="130" y="218">SAMPLES</text><text x="472" y="218">FREQUENCY</text><text x="814" y="218">ANOMALIES</text><text x="1156" y="218">CONFIDENCE</text></g>
+  <g fill="#fff" font-family="Arial" font-size="46"><text x="130" y="283">24,860</text><text x="472" y="283">120 Hz</text><text x="814" y="283">07</text><text x="1156" y="283">98.4%</text></g>
+  <rect x="100" y="370" width="1358" height="404" rx="22" fill="#0b222a"/>
+  <g stroke="#183742"><path d="M150 460h1250M150 550h1250M150 640h1250M150 730h1250"/><path d="M270 410v320M510 410v320M750 410v320M990 410v320M1230 410v320"/></g>
+  <path d="M150 645C240 620 270 430 360 508s160 172 250 28 142-90 224 18 148 92 230-36 152-92 336 65" fill="none" stroke="#de1d8d" stroke-width="9"/>
+</svg>

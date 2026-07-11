@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#f8f5f7"/>
+  <rect x="34" y="34" width="1532" height="832" rx="28" fill="#fff" stroke="#ddd4da"/>
+  <rect x="34" y="34" width="330" height="832" rx="28" fill="#151316"/>
+  <circle cx="92" cy="92" r="15" fill="#de1d8d"/><text x="126" y="104" fill="#fff" font-family="Arial" font-size="31" font-weight="700">ATLAS</text>
+  <g fill="#918a90" font-family="Arial" font-size="22"><text x="84" y="196">INBOX</text><text x="84" y="254">NOTES</text><text x="84" y="312">MAP</text><text x="84" y="370">ARCHIVE</text></g>
+  <text x="438" y="122" fill="#171317" font-family="Georgia" font-size="54" font-weight="700">Knowledge map</text>
+  <text x="440" y="168" fill="#8d8289" font-family="Arial" font-size="20">12 notes · 28 connections · updated today</text>
+  <g stroke="#d8cbd2" stroke-width="4"><path d="M540 390 770 270 1010 400 1260 250"/><path d="M540 390 720 590 1010 400 1190 650"/><path d="M770 270 720 590"/><path d="M1010 400 1360 540"/></g>
+  <g fill="#fff" stroke="#de1d8d" stroke-width="5"><circle cx="540" cy="390" r="58"/><circle cx="770" cy="270" r="75"/><circle cx="1010" cy="400" r="92"/><circle cx="1260" cy="250" r="54"/><circle cx="720" cy="590" r="64"/><circle cx="1190" cy="650" r="72"/><circle cx="1360" cy="540" r="48"/></g>
+  <circle cx="1010" cy="400" r="28" fill="#de1d8d"/>
+</svg>

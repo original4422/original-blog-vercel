@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#f5fbfd"/>
+  <text x="90" y="120" fill="#0a1c22" font-family="Georgia" font-size="56" font-weight="700">Experiment 014</text><text x="90" y="164" fill="#77909a" font-family="Arial" font-size="20">Window 12:30—16:45 · three aligned channels</text>
+  <rect x="90" y="220" width="1420" height="500" rx="28" fill="#fff" stroke="#cce0e7"/>
+  <g stroke="#e0edf1"><path d="M140 330h1320M140 440h1320M140 550h1320M140 660h1320"/></g>
+  <path d="M140 520c110-30 150-170 260-80s180 130 270-12 190-100 265 40 200 130 270-20 125-94 255 20" fill="none" stroke="#de1d8d" stroke-width="8"/>
+  <path d="M140 590c120 50 170-40 250 10s180-80 250 10 190-60 260 10 190-80 270-10 170-30 290-5" fill="none" stroke="#1e8cab" stroke-width="6" opacity=".8"/>
+  <circle cx="935" cy="468" r="14" fill="#de1d8d"/><rect x="1040" y="760" width="470" height="68" rx="34" fill="#07171d"/><text x="1275" y="803" text-anchor="middle" fill="#fff" font-family="Arial" font-size="22">Export comparison</text>
+</svg>

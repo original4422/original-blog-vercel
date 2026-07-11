@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" rx="36" fill="#160c13"/>
+  <radialGradient id="g"><stop stop-color="#de1d8d" stop-opacity=".26"/><stop offset="1" stop-color="#160c13" stop-opacity="0"/></radialGradient><circle cx="800" cy="450" r="430" fill="url(#g)"/>
+  <g stroke="#733557" stroke-width="3"><path d="M316 430 590 246 806 448 1100 240 1340 410"/><path d="M316 430 590 665 806 448 1080 680 1340 410"/><path d="M590 246 590 665M1100 240 1080 680"/></g>
+  <g fill="#21131c" stroke="#de1d8d" stroke-width="5"><circle cx="316" cy="430" r="60"/><circle cx="590" cy="246" r="80"/><circle cx="590" cy="665" r="70"/><circle cx="806" cy="448" r="120"/><circle cx="1100" cy="240" r="74"/><circle cx="1080" cy="680" r="82"/><circle cx="1340" cy="410" r="64"/></g>
+  <text x="806" y="460" text-anchor="middle" fill="#fff" font-family="Georgia" font-size="32">original</text>
+  <text x="70" y="90" fill="#fff" font-family="Georgia" font-size="52">Atlas / map</text>
+</svg>

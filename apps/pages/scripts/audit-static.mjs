@@ -17,6 +17,7 @@ const requiredFiles = [
   'feed.xml',
   'sitemap.xml',
   'robots.txt',
+  'version.json',
   'blog/index.html',
   'tags/index.html',
   'projects/index.html',
@@ -32,19 +33,48 @@ for (const file of requiredFiles) {
 }
 
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const expectedBasePath = (
+  process.env.NEXT_PUBLIC_BASE_PATH ?? '/original-blog-pages'
+).replace(/\/$/, '');
+const expectedSiteUrl = (
+  process.env.SITE_URL ?? 'https://original4422.github.io/original-blog-pages'
+).replace(/\/$/, '');
+assert(
+  manifest.basePath === expectedBasePath,
+  `Manifest basePath ${manifest.basePath} does not match ${expectedBasePath}.`,
+);
+assert(
+  manifest.siteUrl === expectedSiteUrl,
+  `Manifest siteUrl ${manifest.siteUrl} does not match ${expectedSiteUrl}.`,
+);
+const version = JSON.parse(
+  fs.readFileSync(path.join(out, 'version.json'), 'utf8'),
+);
+assert(version.app === 'pages', 'out/version.json has the wrong app value.');
+assert(
+  typeof version.commit === 'string' &&
+    /^[0-9a-f]{7,64}$/i.test(version.commit),
+  'out/version.json has no valid source commit.',
+);
+assert(
+  !Number.isNaN(Date.parse(version.builtAt)),
+  'out/version.json has an invalid builtAt value.',
+);
 const homeHtml = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
 const tagsHtml = fs.readFileSync(path.join(out, 'tags', 'index.html'), 'utf8');
 assert(
-  homeHtml.includes('/original-blog-pages/_next/'),
-  'Exported assets are not prefixed with /original-blog-pages.',
+  homeHtml.includes(`${expectedBasePath}/_next/`),
+  `Exported assets are not prefixed with ${expectedBasePath}.`,
 );
-assert(
-  !homeHtml.includes('/original-blog-pages/original-blog-pages/'),
-  'An internal link contains the base path twice.',
-);
+if (expectedBasePath) {
+  assert(
+    !homeHtml.includes(`${expectedBasePath}${expectedBasePath}/`),
+    'An internal link contains the base path twice.',
+  );
+}
 assert(homeHtml.includes('我是'), 'Home hero copy missing from export.');
 assert(
-  tagsHtml.includes('/original-blog-pages/tags/System%20Design/'),
+  tagsHtml.includes(`${expectedBasePath}/tags/System%20Design/`),
   'The spaced tag route lost its required trailing slash.',
 );
 

@@ -1,0 +1,37 @@
+name: Verify deployment freshness
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: freshness-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Confirm both deployments reach current main
+    if: github.event.repository.name == 'original-blog'
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    env:
+      EXPECTED_COMMIT: ${{ github.sha }}
+      VERCEL_VERSION_URL: ${{ vars.VERCEL_VERSION_URL || 'https://original-blog-vercel.vercel.app/version.json' }}
+      PAGES_VERSION_URL: ${{ vars.PAGES_VERSION_URL || format('https://{0}.github.io/{1}/version.json', github.repository_owner, github.event.repository.name) }}
+      FRESHNESS_TIMEOUT_SECONDS: 900
+      FRESHNESS_POLL_SECONDS: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Poll public version endpoints
+        run: node scripts/verify-deploy-freshness.mjs

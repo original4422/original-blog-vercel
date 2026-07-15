@@ -1,169 +1,166 @@
-# 双版本部署与上线验收手册
+# Monorepo 双版本部署与恢复手册
 
-> 迁移提示：本文当前记录迁移前的双仓库操作路径。monorepo 的根级命令、最终 `original-blog` Pages 路径和版本新鲜度检查将在迁移 Task 7 完成后更新；在此之前，它仍用于恢复和核对两个不可变基线。
+本文记录 `original-blog` monorepo 的构建、部署、版本新鲜度和人工切换流程。迁移前两仓库的不可变证据见 [`migration/baselines.md`](migration/baselines.md)，历史验收结果见 [`acceptance.md`](acceptance.md)。
 
-本文把两套博客从“代码已完成”推进到“生产站点可访问且证据充分”的发布、监控和验收步骤固定下来。它不会取代 [`acceptance.md`](acceptance.md)；后者定义完成标准，本文定义如何取得这些标准所需的当前证据。
+## 当前边界
 
-## 目标与固定边界
+| 目标 | 应用目录 | 平台 | 当前/最终公开地址 |
+| --- | --- | --- | --- |
+| 主站 | `apps/vercel` | Vercel | `https://original-blog-vercel.vercel.app/` |
+| 温备站 | `apps/pages` | GitHub Pages | 最终为 `https://original4422.github.io/original-blog/` |
+| 迁移期间旧温备 | 独立归档仓库 | GitHub Pages | `https://original4422.github.io/original-blog-pages/` |
 
-| 版本 | 本地目录 | GitHub 仓库 | 托管目标 | 正式站点根路径 |
-| --- | --- | --- | --- | --- |
-| GitHub + Vercel | `github-vercel/` | `original4422/original-blog-vercel` | Vercel | `https://original-blog-vercel.vercel.app/` |
-| GitHub Pages | `github-pages/` | `original4422/original-blog-pages` | GitHub Pages | `https://original4422.github.io/original-blog-pages/` |
+当前没有自定义域名。旧 Pages 在新 Pages 完成生产验收前保持在线；不要把迁移承接仓库仍名为 `original-blog-vercel` 时产生的临时项目路径当成最终温备地址。
 
-Pages 是项目站点，`/original-blog-pages` 是强制的 `basePath`，不是可以省略的展示前缀。验收时 `BASE_URL` 可以传 `https://original4422.github.io`，脚本会追加该前缀；也可以直接传完整站点根地址。Vercel 地址必须传 origin，不带页面路径。
+公开语义内容只允许在 `packages/content` 中维护。`apps/vercel` 与 `apps/pages` 可以使用不同组件、布局和平台能力，但不得分别维护文章、项目、身份或页面正文副本。
 
-发布前分别在两个版本目录执行其 README 规定的安装、检查和生产构建。GitHub Pages 还必须运行 `pnpm audit:static`，确认 `out/` 包含 `.nojekyll`、404、Feed、Sitemap、robots 和静态搜索索引。只有本地门禁全部成功后才推送 `main`。
+## 本地发布门禁
 
-## 仓库与提交身份核对
-
-在发布前记录本地提交并确认远端指向正确仓库：
+使用 Node.js 24.x 和根 `package.json` 指定的 pnpm 版本：
 
 ```bash
-git -C github-vercel remote -v
-git -C github-vercel rev-parse HEAD
-gh repo view original4422/original-blog-vercel \
-  --json nameWithOwner,url,defaultBranchRef
-
-git -C github-pages remote -v
-git -C github-pages rev-parse HEAD
-gh repo view original4422/original-blog-pages \
-  --json nameWithOwner,url,defaultBranchRef
+corepack enable
+pnpm install --frozen-lockfile
+pnpm audit:content
+pnpm check
+pnpm typecheck
+pnpm build
+pnpm --filter @original/blog-pages audit:static
+pnpm audit:versions
+pnpm test:e2e
 ```
 
-最终验收记录必须包含两个部署提交 SHA。不要用“本地 build 通过”替代线上部署 SHA，也不要用旧工作流或旧 Vercel deployment 证明当前提交已上线。
+期望结果：
 
-## Vercel：固定 Node 24 并监控生产部署
+- 两套应用均完成生产构建；
+- Pages 导出 24 条公开路由、8 条搜索记录和 11 个标签页；
+- 320×568、390×844 与 1280×800 导航回归通过；
+- `apps/vercel/public/version.json` 与 `apps/pages/out/version.json` 指向同一提交；
+- 仓库中只有一个 `pnpm-lock.yaml`。
 
-本机 Vercel CLI 在 Node 24 下执行。每次调用都显式放置 Node 24，避免终端默认 Node 版本漂移：
+需要检查真实 Pages 生产路径时先运行 `pnpm build:pages`，再运行：
+
+```bash
+pnpm preview:pages
+```
+
+默认地址为 `http://127.0.0.1:4173/original-blog-pages/`。预览器直接挂载带生产 `basePath` 的 `apps/pages/out`，不重新构建无前缀变体。
+
+## GitHub Actions 质量门禁
+
+`.github/workflows/ci.yml` 在 Pull Request 和 `main` 更新时运行完整质量门禁：内容审计、格式与 lint、类型检查、双构建、Pages 静态审计、版本审计和 Playwright 导航测试。任一步骤失败均不得进入上线窗口。
+
+工作流固定使用 Node.js 24。提交前的本地 Node 版本不同不代表 CI 已验证，最终以 GitHub Actions 结果为准。
+
+## Vercel 主站部署
+
+Vercel 继续由现有 GitHub 集成监听 `main`。正式迁移时必须在 Vercel Project 中确认：
+
+1. Root Directory 为 `apps/vercel`；
+2. 构建可以读取仓库根的 `pnpm-workspace.yaml`、根锁文件与 `packages/content`；
+3. Production Branch 为 `main`；
+4. 已启用 Automatically expose System Environment Variables，使 `VERCEL_GIT_COMMIT_SHA` 可用于 `/version.json`；
+5. 迁移分支 Preview 通过后才合并，不预先删除当前 Production deployment。
+
+只读核验命令：
 
 ```bash
 NODE24_BIN="$(brew --prefix node@24)/bin"
-env PATH="$NODE24_BIN:$PATH" node --version
-env PATH="$NODE24_BIN:$PATH" vercel whoami
-```
-
-输出应显示 Node `v24.x`、Vercel 账号 `original4422` 与预期 team。由连接到 `main` 的 GitHub 集成触发生产部署后，用以下只读命令定位并检查 deployment；`<production-url>` 替换为实际 Production alias：
-
-```bash
 env PATH="$NODE24_BIN:$PATH" vercel list original-blog-vercel
-env PATH="$NODE24_BIN:$PATH" vercel inspect https://<production-url>
+env PATH="$NODE24_BIN:$PATH" vercel inspect https://<deployment-url>
+curl -fsS https://original-blog-vercel.vercel.app/version.json
 ```
 
-验收条件是 deployment 状态为 Ready、来源仓库和生产分支正确、部署提交与本次 Git SHA 一致，并且稳定 Production alias 指向它。若失败，先看 Vercel build log，修复源码后提交新 SHA；不要把 Preview URL 当作正式网址。
+验收时 `/version.json` 的 `commit` 必须等于目标 `main` SHA，`app` 必须为 `vercel`。
 
-## GitHub Pages：监控 build 与 deploy 两阶段
+## GitHub Pages 构建与部署
 
-推送 `main` 后，工作流 `.github/workflows/deploy-pages.yml` 必须完整成功。读取最近运行并锁定当前 SHA 对应的 run：
+`.github/workflows/deploy-pages.yml` 在每次 `main` 更新后独立构建并审计 Pages。它根据仓库名生成：
+
+- `NEXT_PUBLIC_BASE_PATH=/<repository-name>`；
+- `SITE_URL=https://<owner>.github.io/<repository-name>`。
+
+仓库仍名为 `original-blog-vercel` 时，workflow 只执行 build 与 audit，不配置、上传或部署 Pages。仓库重命名为 `original-blog` 后，`configure-pages`、artifact upload 和 deploy job 自动激活，最终路径为 `/original-blog/`。
+
+监控命令：
 
 ```bash
 gh run list \
-  --repo original4422/original-blog-pages \
+  --repo original4422/original-blog \
   --workflow deploy-pages.yml \
   --branch main \
   --limit 10 \
   --json databaseId,headSha,status,conclusion,url
-```
 
-确认 `headSha` 等于部署提交后再监控；不要默认列表第一条就是当前提交：
-
-```bash
 gh run watch <run-id> \
-  --repo original4422/original-blog-pages \
+  --repo original4422/original-blog \
   --exit-status
+
+gh api repos/original4422/original-blog/pages
+curl -fsS https://original4422.github.io/original-blog/version.json
 ```
 
-失败时读取失败步骤日志：
+仅 build job 成功不代表已发布；deploy job、公开 URL 和 `version.json` 都必须通过。
 
-```bash
-gh run view <run-id> \
-  --repo original4422/original-blog-pages \
-  --log-failed
-```
+## 15 分钟版本新鲜度目标
 
-成功后再读取 Pages 当前发布信息并确认 URL：
+`.github/workflows/verify-deploy-freshness.yml` 在仓库最终命名为 `original-blog` 后激活。它轮询主站和温备站的 `/version.json`，最多等待 900 秒：
 
-```bash
-gh api repos/original4422/original-blog-pages/pages
-```
+- 两边 `commit` 都等于触发 workflow 的 `main` SHA 时成功；
+- 超过 15 分钟仍未收敛时 workflow 失败并形成可见告警；
+- 新的 `main` 提交会取消旧轮询，只追踪最新生产意图，不逐个补发中间版本。
 
-仅 build job 成功不够；依赖它的 deploy job 也必须成功，且线上地址需要通过下一节的 HTTP 验收。
+默认 Vercel 端点为 `https://original-blog-vercel.vercel.app/version.json`。如平台地址发生变化，可设置仓库变量 `VERCEL_VERSION_URL`；Pages 端点也可用 `PAGES_VERSION_URL` 覆盖。
 
-## 生产路由状态矩阵
+## 生产访问矩阵
 
-所有检查使用 GET 并跟随平台规范化重定向，以下是最终响应预期：
-
-| 能力 | Vercel 路径 | Pages 路径 | 最终状态 |
+| 能力 | Vercel | 最终 Pages | 预期 |
 | --- | --- | --- | --- |
-| 首页 | `/` | `/original-blog-pages/` | 200 |
-| Blog | `/blog/` | `/original-blog-pages/blog/` | 200 |
-| Tags | `/tags/` | `/original-blog-pages/tags/` | 200 |
-| Projects | `/projects/` | `/original-blog-pages/projects/` | 200 |
-| About | `/about/` | `/original-blog-pages/about/` | 200 |
-| 文章详情 | `/blog/<slug>/` | `/original-blog-pages/blog/<slug>/` | 200 |
-| 标签详情 | `/tags/<tag>/` | `/original-blog-pages/tags/<tag>/` | 200 |
-| 项目详情 | `/projects/<slug>/` | `/original-blog-pages/projects/<slug>/` | 200 |
-| robots | `/robots.txt` | `/original-blog-pages/robots.txt` | 200 |
-| Sitemap | `/sitemap.xml` | `/original-blog-pages/sitemap.xml` | 200 + 可解析 XML |
-| Feed | `/feed.xml` | `/original-blog-pages/feed.xml` | 200 + 至少一条 item/entry |
-| 搜索 | `/api/search-index` | `/original-blog-pages/search-index.json` | 200 + 非空合法 JSON |
-| 未知路径 | `/__deployment_verifier_missing__/` | `/original-blog-pages/__deployment_verifier_missing__/` | 404 |
+| 首页 | `/` | `/original-blog/` | 200 |
+| Blog | `/blog/` | `/original-blog/blog/` | 200 |
+| Tags | `/tags/` | `/original-blog/tags/` | 200 |
+| Projects | `/projects/` | `/original-blog/projects/` | 200 |
+| About | `/about/` | `/original-blog/about/` | 200 |
+| 文章详情 | `/blog/<slug>/` | `/original-blog/blog/<slug>/` | 200 |
+| 标签详情 | `/tags/<tag>/` | `/original-blog/tags/<tag>/` | 200 |
+| 项目详情 | `/projects/<slug>/` | `/original-blog/projects/<slug>/` | 200 |
+| Feed | `/feed.xml` | `/original-blog/feed.xml` | 200 + XML |
+| Sitemap | `/sitemap.xml` | `/original-blog/sitemap.xml` | 200 + XML |
+| 搜索 | `/api/search-index` | `/original-blog/search-index.json` | 200 + JSON |
+| 版本 | `/version.json` | `/original-blog/version.json` | 200 + 当前 SHA |
+| 未知路径 | `/__missing__/` | `/original-blog/__missing__/` | 404 |
 
-`feed.xml` 是两版共同的正式契约；遗留的 `rss.xml` 不能替代它。Sitemap、Feed 和 robots 中的绝对 URL 必须属于各自生产站点，Pages URL 必须包含项目 base path。搜索 JSON 至少要为每条记录提供非空 `title`，并提供显式 `slug` 或可推导 slug 的站内 `url`。
+Pages 的 HTML、CSS、JavaScript、图片和内部链接都必须带 `/original-blog` 前缀。浏览器复检至少覆盖桌面 1280×800、移动 320×568 和 390×844，并检查菜单焦点、滚动锁定、Escape、导航关闭、主题、搜索、文章公式与控制台错误。
 
-## 自动化 HTTP 验收
+## 人工灾备切换
 
-根工作区的 [`scripts/verify-site.sh`](../scripts/verify-site.sh) 只发送只读 GET 请求；响应体写入临时目录并在退出时清理。它不调用 GitHub/Vercel 写接口，不跳过 TLS 验证，也不使用 `eval`。详情参数传原始值，脚本负责 URL-segment 编码，因此可以覆盖中文、空格和 `C++` 标签。
+目标是已发布版本 RPO 为 0、RTO 不超过 1 小时，切换保持人工决策：
 
-Vercel 示例：
+1. 先读取两边 `/version.json`，确认 Pages 已包含主站最后一个已发布提交；
+2. 运行生产访问矩阵并检查 Pages 核心交互；
+3. 在现有公开渠道明确通知临时入口为 Pages URL；
+4. 记录故障开始时间、切换时间、目标提交和验证证据；
+5. 主站恢复后再次核对版本与访问矩阵，再人工撤销临时入口通知。
 
-```bash
-BASE_URL=https://<production-url> \
-  ./scripts/verify-site.sh \
-  --target vercel \
-  --slug <known-post-slug> \
-  --tag 'C++' \
-  --project <known-project-slug>
-```
+当前没有自定义域名，因此“切换”只能通过发布和传播备用 URL 完成，不能实现透明 DNS 切换。域名方案后续单独讨论。
 
-GitHub Pages 示例：
+## 回退边界
 
-```bash
-BASE_URL=https://original4422.github.io \
-  ./scripts/verify-site.sh \
-  --target pages \
-  --pages-base-path /original-blog-pages \
-  --slug <known-post-slug> \
-  --tag 'C++' \
-  --project <known-project-slug>
-```
+- Vercel 迁移失败：保留并恢复到迁移前 tag `pre-monorepo-vercel-2026-07-15` 对应的已知良好 deployment；
+- 新 Pages 失败：旧 `original-blog-pages` 继续在线，不归档旧仓库；
+- 工作流配置错误：修复后提交新 SHA，不修改或伪造已发布版本文件；
+- 两个线上版本不一致：以 `main` 的当前生产意图和 `/version.json` 为证据，等待或重新触发对应平台部署。
 
-脚本会检查核心路由、可选详情路由、真实 404、robots 的 Sitemap 声明、Sitemap 路由覆盖、Feed XML 与生产链接、平台对应的搜索 JSON。任一失败均以退出码 1 结束；参数或依赖错误以退出码 2 结束。没有提供详情参数时相应路由会明确显示 `SKIP`，因此最终 Goal 验收应提供三个当前确实存在的值，而不是依赖跳过项。
-
-## 浏览器视觉与交互复检
-
-HTTP 通过只证明路由和发布资产可用，不能证明“显示符合预期”。两个正式网址都需要在 `1440×900` 与 `390×844` 下逐项检查：
-
-1. 首页 Hero → Intro → 四段 Works → Contact 顺序、流体背景与滚动动画；无横向溢出。
-2. 桌面/移动导航、深浅主题切换与刷新后持久化。
-3. 搜索按钮、`Cmd/Ctrl+K`、键盘选择、关闭与详情跳转。
-4. 示例 MDX 的目录、阅读进度、代码高亮、KaTeX、表格和图片。
-5. DevTools Console 无关键错误，Network 无意外 4xx/5xx；Pages 静态资源请求均包含 `/original-blog-pages`。
-6. 未知路径显示定制 404；文章、标签和项目详情直接刷新仍可用。
-
-发现问题后必须修复、重新构建、提交、等待对应平台完成新部署，再从 HTTP 矩阵和浏览器检查起点复验。
-
-## 最终证据模板
-
-把当前结果写入 [`acceptance.md`](acceptance.md) 的“最终证据”，至少包含：
+## 上线证据模板
 
 ```text
-Vercel URL:
-Vercel deployment SHA / Ready 时间:
-Pages URL: https://original4422.github.io/original-blog-pages/
-Pages workflow run / deployment SHA:
-verify-site.sh 两次运行结果与日期（Asia/Shanghai）:
-桌面、移动、深浅主题、搜索和 Console 检查结果:
+目标 main SHA:
+CI workflow run:
+Vercel deployment URL / Ready 时间 / version.json:
+Pages workflow run / deployment URL / version.json:
+新鲜度 workflow 结果与收敛耗时:
+桌面与移动浏览器检查:
+故障或回退记录:
 ```
 
-只有两版生产 URL 均通过自动化矩阵和浏览器复检，且证据对应当前部署 SHA，才满足上线完成条件。
+只有 CI、两个平台部署、公开访问矩阵、版本新鲜度和浏览器复检都对应同一目标提交时，才可以宣称新架构正式上线。

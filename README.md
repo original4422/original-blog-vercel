@@ -25,6 +25,9 @@ pnpm install
 pnpm check
 pnpm typecheck
 pnpm build
+pnpm --filter @original/blog-pages audit:static
+pnpm audit:versions
+pnpm test:e2e
 ```
 
 按应用运行：
@@ -34,9 +37,10 @@ pnpm dev:vercel
 pnpm dev:pages
 pnpm build:vercel
 pnpm build:pages
+pnpm preview:pages
 ```
 
-这些根级 workspace 命令将在本迁移分支后续结构提交中启用；迁移完成前，当前 Vercel 应用仍可使用原根目录的 `pnpm dev`、`pnpm check`、`pnpm typecheck` 和 `pnpm build`。
+`pnpm preview:pages` 直接按生产 `basePath` 预览 Pages 导出物。CI 在 Node.js 24 上执行相同的内容、类型、双构建、静态导出、版本和导航门禁。
 
 ## 生产站点
 

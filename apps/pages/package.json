@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "sync:content-media": "node ../../scripts/sync-content-media.mjs pages",
-    "dev": "pnpm sync:content-media && next dev --webpack",
+    "generate:version": "node ../../scripts/generate-build-version.mjs pages",
+    "dev": "pnpm sync:content-media && pnpm generate:version && next dev --webpack",
     "generate": "tsx scripts/generate-static.mjs",
-    "build": "pnpm sync:content-media && pnpm generate && next build",
+    "build": "pnpm sync:content-media && pnpm generate:version && pnpm generate && next build",
     "preview": "node ../../scripts/preview-pages.mjs",
     "check": "biome check .",
     "typecheck": "tsc --noEmit",

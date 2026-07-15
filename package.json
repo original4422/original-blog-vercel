@@ -15,6 +15,7 @@
     "build:pages": "pnpm --filter @original/blog-pages build",
     "preview:pages": "pnpm --filter @original/blog-pages preview",
     "audit:content": "tsx scripts/audit-content.ts",
+    "audit:versions": "node scripts/audit-build-versions.mjs",
     "check": "pnpm -r --if-present check",
     "typecheck": "pnpm -r --if-present typecheck",
     "test:e2e": "playwright test",

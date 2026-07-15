@@ -1,0 +1,77 @@
+name: Build and deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: 1
+  NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+
+jobs:
+  build:
+    name: Build Pages candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Pages application
+        run: pnpm build:pages
+
+      - name: Audit Pages export
+        run: pnpm --filter @original/blog-pages audit:static
+
+      - name: Audit generated version
+        run: |
+          test "$(node -p "require('./apps/pages/out/version.json').commit")" = "$GITHUB_SHA"
+
+      - name: Configure GitHub Pages
+        if: github.event.repository.name == 'original-blog'
+        uses: actions/configure-pages@v6
+
+      - name: Upload GitHub Pages artifact
+        if: github.event.repository.name == 'original-blog'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: apps/pages/out
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy final Pages site
+    if: github.event.repository.name == 'original-blog'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

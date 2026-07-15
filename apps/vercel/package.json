@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "sync:content-media": "node ../../scripts/sync-content-media.mjs vercel",
-    "dev": "pnpm sync:content-media && next dev --webpack",
-    "build": "pnpm sync:content-media && next build",
+    "generate:version": "node ../../scripts/generate-build-version.mjs vercel",
+    "dev": "pnpm sync:content-media && pnpm generate:version && next dev --webpack",
+    "build": "pnpm sync:content-media && pnpm generate:version && next build",
     "serve": "next start",
     "lint": "biome lint .",
     "format": "biome format --write .",

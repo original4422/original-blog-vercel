@@ -22,6 +22,7 @@ build/
 # rss feed
 apps/vercel/public/feed.xml
 apps/*/public/content/
+apps/*/public/version.json
 
 # misc
 .DS_Store

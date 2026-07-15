@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build",
+    "sync:content-media": "node ../../scripts/sync-content-media.mjs vercel",
+    "dev": "pnpm sync:content-media && next dev --webpack",
+    "build": "pnpm sync:content-media && next build",
     "serve": "next start",
     "lint": "biome lint .",
     "format": "biome format --write .",
@@ -12,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@original/content": "workspace:*",
     "@radix-ui/react-tooltip": "1.2.8",
     "@tailwindcss/postcss": "^4.0.15",
     "@types/node": "24.10.1",

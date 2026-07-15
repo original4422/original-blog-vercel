@@ -1,6 +1,6 @@
 export interface Project {
 	title: string;
-	src: string;
+	image: string;
 	color: string;
 	url?: string;
 	slug?: string;

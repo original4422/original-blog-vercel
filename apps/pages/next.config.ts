@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   pageExtensions: ['ts', 'tsx'],
+  transpilePackages: ['@original/content'],
 };
 
 export default nextConfig;

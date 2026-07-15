@@ -1,3 +1,4 @@
+import { pageContent } from '@original/content';
 import Link from 'next/link';
 import { siteConfig } from '../../../../site.config';
 
@@ -71,10 +72,11 @@ export default function Footer({
 				{!isHero ? (
 					<>
 						<p className='text-center text-sm text-gray-600 dark:text-gray-400'>
-							© {year} • {siteConfig.name} • Blog
+							© {year} • {siteConfig.name} •{' '}
+							{pageContent.footer.copyrightSuffix}
 						</p>
 						<p className='text-center text-xs text-gray-500 opacity-70'>
-							Built with Next.js & Tailwind CSS
+							{pageContent.footer.builtWith}
 						</p>
 					</>
 				) : null}

@@ -44,8 +44,8 @@ assert(
 );
 assert(homeHtml.includes('我是'), 'Home hero copy missing from export.');
 assert(
-  tagsHtml.includes('/original-blog-pages/tags/Next.js/'),
-  'The dotted tag route lost its required trailing slash.',
+  tagsHtml.includes('/original-blog-pages/tags/System%20Design/'),
+  'The spaced tag route lost its required trailing slash.',
 );
 
 const searchIndex = JSON.parse(
@@ -60,7 +60,7 @@ assert(
   'Search index has no projects.',
 );
 
-for (const tag of ['Paper Notes', '中文写作', 'C++']) {
+for (const tag of ['Paper Reading', '数字花园', 'C++']) {
   assert(
     manifest.tags.includes(tag),
     `Special tag missing from manifest: ${tag}`,
@@ -78,7 +78,7 @@ const walk = (dir) => {
 };
 walk(path.join(out, 'tags'));
 
-for (const tag of ['Paper Notes', '中文写作', 'C++']) {
+for (const tag of ['Paper Reading', '数字花园', 'C++']) {
   const tagPage = path.join(out, 'tags', tag, 'index.html');
   assert(fs.existsSync(tagPage), `Missing exported tag route: ${tag}`);
   const tagHtml = fs.readFileSync(tagPage, 'utf8');

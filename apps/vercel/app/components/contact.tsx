@@ -1,3 +1,4 @@
+import { pageContent } from '@original/content';
 import { siteConfig } from '../../site.config';
 
 export default function Contact() {
@@ -5,7 +6,8 @@ export default function Contact() {
 		<section className='relative h-screen w-screen py-10 px-12 md:px-32 xl:px-36 dark:bg-black dark:text-white bg-white text-black'>
 			<div className='flex flex-col justify-center h-5/6 gap-10 md:gap-16'>
 				<h2 className='text-3xl md:text-6xl xl:text-8xl'>
-					Let&apos;s make something <br /> great together
+					{pageContent.home.contact.lineOne} <br />
+					{pageContent.home.contact.lineTwo}
 				</h2>
 				<a
 					href={`mailto:${siteConfig.email}`}

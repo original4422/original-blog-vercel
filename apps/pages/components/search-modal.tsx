@@ -1,5 +1,6 @@
 'use client';
 
+import { pageContent } from '@original/content';
 import Fuse from 'fuse.js';
 import { ArrowUpRight, Search, X } from 'lucide-react';
 import Link from 'next/link';
@@ -102,17 +103,19 @@ export function SearchModal() {
                 ref={inputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="搜索文章、标签或项目…"
-                aria-label="搜索内容"
+                placeholder={pageContent.search.placeholder}
+                aria-label={pageContent.search.label}
               />
               <button type="button" onClick={close} aria-label="关闭搜索">
                 <X aria-hidden="true" />
               </button>
             </div>
             <div className="search-results" aria-live="polite">
-              {loading && <p className="search-state">正在载入索引…</p>}
+              {loading && (
+                <p className="search-state">{pageContent.search.loading}</p>
+              )}
               {!loading && results.length === 0 && (
-                <p className="search-state">没有找到匹配内容。</p>
+                <p className="search-state">{pageContent.search.noResults}</p>
               )}
               {results.map((item) => (
                 <Link

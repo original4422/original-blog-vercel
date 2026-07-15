@@ -1,5 +1,6 @@
 'use client';
 
+import { pageContent } from '@original/content';
 import { useLenis } from 'lenis/react';
 import { useRef, useState } from 'react';
 
@@ -51,20 +52,19 @@ export default function Intro() {
 						className='intro-text'
 						style={{ opacity: opacityForBlock(progress, 0) }}
 					>
-						I think in systems.
+						{pageContent.home.intro[0]}
 					</div>
 					<span
 						className="intro-text inline-block after:content-['_']"
 						style={{ opacity: opacityForBlock(progress, 1) }}
 					>
-						I build useful software and write to understand.
+						{pageContent.home.intro[1]}
 					</span>
 					<span
 						className='intro-text inline-block'
 						style={{ opacity: opacityForBlock(progress, 2) }}
 					>
-						I collect the details that make ideas clear, useful, and worth
-						remembering.
+						{pageContent.home.intro[2]}
 					</span>
 				</div>
 			</div>

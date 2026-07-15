@@ -1,3 +1,4 @@
+import { pageContent } from '@original/content';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,8 +8,8 @@ import { projects } from '@/data/projects';
 import { SITE_URL, withBasePath } from '@/data/site';
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'original 的项目作品集。',
+  title: pageContent.projects.title,
+  description: pageContent.projects.metadataDescription,
   alternates: { canonical: `${SITE_URL}/projects/` },
 };
 
@@ -17,8 +18,8 @@ export default function ProjectsPage() {
     <main id="main-content" className="page-shell">
       <PageHeader
         eyebrow={`${projects.length} selected projects`}
-        title="Projects"
-        description="把想法变成可以使用和讨论的东西。以下项目均为布局占位示例，等待替换为你的真实作品。"
+        title={pageContent.projects.title}
+        description={pageContent.projects.listingDescription}
       />
       <div className="projects-grid">
         {projects.map((project) => (

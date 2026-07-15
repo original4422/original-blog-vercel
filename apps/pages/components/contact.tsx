@@ -1,3 +1,4 @@
+import { pageContent } from '@original/content';
 import { ArrowUpRight } from 'lucide-react';
 
 import { siteConfig } from '@/data/site';
@@ -5,11 +6,11 @@ import { siteConfig } from '@/data/site';
 export function Contact() {
   return (
     <section className="contact">
-      <p className="eyebrow">Have an idea worth exploring?</p>
+      <p className="eyebrow">{pageContent.home.contact.eyebrow}</p>
       <h2 className="display">
-        Let&apos;s make
+        {pageContent.home.contact.lineOne}
         <br />
-        something <em>useful.</em>
+        <em>{pageContent.home.contact.lineTwo}</em>
       </h2>
       <a className="contact-link" href={`mailto:${siteConfig.email}`}>
         <span>

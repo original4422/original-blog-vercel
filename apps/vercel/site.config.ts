@@ -1,3 +1,5 @@
+import { siteContent } from '@original/content';
+
 function normalizeUrl(url: string) {
 	return url.replace(/\/$/, '');
 }
@@ -15,13 +17,6 @@ function resolveSiteUrl() {
 }
 
 export const siteConfig = {
-	name: 'original',
-	title: 'original — Blog & Projects',
-	description: '记录技术、思考与创造的个人数字花园。',
-	locale: 'zh_CN',
-	language: 'zh-CN',
+	...siteContent,
 	url: resolveSiteUrl(),
-	email: 'pzg24@mails.tsinghua.edu.cn',
-	github: 'https://github.com/original4422',
-	githubHandle: '@original4422',
 } as const;

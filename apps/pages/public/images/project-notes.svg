@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
-  <rect width="1600" height="1000" fill="#e9e5dc"/>
-  <g stroke="#171416" stroke-opacity=".12"><path d="M0 166H1600M0 332H1600M0 498H1600M0 664H1600M0 830H1600"/><path d="M266 0V1000M532 0V1000M798 0V1000M1064 0V1000M1330 0V1000"/></g>
-  <g transform="translate(155 132) rotate(-4 310 300)"><rect width="630" height="690" rx="8" fill="#f9f7f1" stroke="#171416" stroke-opacity=".14"/><text x="65" y="115" fill="#de1d8d" font-family="Arial,sans-serif" font-size="19" letter-spacing="4">FIELD NOTE 017</text><text x="65" y="198" fill="#171416" font-family="Georgia,serif" font-size="58">Things worth</text><text x="65" y="264" fill="#171416" font-family="Georgia,serif" font-size="58">remembering.</text><path d="M65 330H565M65 374H510M65 418H548M65 510H565M65 554H480M65 598H528" stroke="#171416" stroke-opacity=".25" stroke-width="7"/></g>
-  <g transform="translate(840 212) rotate(5 260 270)"><rect width="545" height="570" rx="8" fill="#151116"/><circle cx="72" cy="76" r="18" fill="#de1d8d"/><text x="110" y="84" fill="#fff" fill-opacity=".52" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">LINKED NOTE</text><path d="M74 180H468M74 226H430M74 272H470M74 374H435M74 420H475" stroke="#fff" stroke-opacity=".3" stroke-width="7"/><path d="m410 463 54 0 0 54" fill="none" stroke="#de1d8d" stroke-width="5"/></g>
-  <text x="1130" y="890" fill="#171416" fill-opacity=".55" font-family="Arial,sans-serif" font-size="18">EXAMPLE / 03</text>
-</svg>

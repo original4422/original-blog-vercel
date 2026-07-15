@@ -1,5 +1,6 @@
 'use client';
 
+import { pageContent } from '@original/content';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect, useRef } from 'react';
@@ -31,11 +32,11 @@ export function Intro() {
   return (
     <section className="intro" id="intro" ref={container}>
       <div className="intro-copy display">
-        <span data-intro-line>我喜欢把复杂的东西讲清楚。</span>
-        <span data-intro-line>我用代码构建工具，也用文字保存过程。</span>
-        <span data-intro-line>
-          我关心那些会被人使用、记住，并继续生长的作品。
-        </span>
+        {pageContent.home.intro.map((line) => (
+          <span data-intro-line key={line}>
+            {line}
+          </span>
+        ))}
       </div>
     </section>
   );

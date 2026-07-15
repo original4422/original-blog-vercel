@@ -19,6 +19,7 @@ apps/vercel/public/sitemap.xml
 build/
 # rss feed
 apps/vercel/public/feed.xml
+apps/*/public/content/
 
 # misc
 .DS_Store

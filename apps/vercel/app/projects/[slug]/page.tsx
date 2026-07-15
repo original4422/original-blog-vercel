@@ -90,8 +90,8 @@ export default async function ProjectDetailPage(props: {
 
 									return (
 										<Link
-											key={link.url}
-											href={link.url}
+											key={link.href}
+											href={link.href}
 											target='_blank'
 											rel='noopener noreferrer'
 											aria-label={link.label}

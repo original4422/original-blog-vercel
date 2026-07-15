@@ -1,21 +1,23 @@
 'use client';
 
+import { pageContent } from '@original/content';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface Post {
+interface SearchItem {
+	type: 'post' | 'project';
 	title: string;
 	summary: string;
 	tags: string[];
 	publishedAt: string;
-	slug: string;
+	url: string;
 }
 
 type Status = 'idle' | 'loading' | 'error' | 'success';
 
-let cachedPosts: Post[] | null = null;
-let fuseInstance: import('fuse.js').default<Post> | null = null;
+let cachedItems: SearchItem[] | null = null;
+let fuseInstance: import('fuse.js').default<SearchItem> | null = null;
 
 interface SearchModalProps {
 	isOpen: boolean;
@@ -25,7 +27,7 @@ interface SearchModalProps {
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 	const router = useRouter();
 	const [query, setQuery] = useState('');
-	const [results, setResults] = useState<Post[]>([]);
+	const [results, setResults] = useState<SearchItem[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [status, setStatus] = useState<Status>('idle');
 	const [isComposing, setIsComposing] = useState(false);
@@ -54,23 +56,23 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 		const focusTimer = setTimeout(() => inputRef.current?.focus(), 0);
 		const controller = new AbortController();
 
-		if (!cachedPosts) {
+		if (!cachedItems) {
 			setStatus('loading');
 			fetch('/api/search-index', { signal: controller.signal })
 				.then((res) => {
 					if (!res.ok) throw new Error();
 					return res.json();
 				})
-				.then((data: { posts: Post[] }) => {
-					cachedPosts = data.posts;
-					setResults(cachedPosts.slice(0, 5));
+				.then((data: { items: SearchItem[] }) => {
+					cachedItems = data.items;
+					setResults(cachedItems.slice(0, 5));
 					setStatus('success');
 				})
 				.catch((err) => {
 					if (err.name !== 'AbortError') setStatus('error');
 				});
 		} else {
-			setResults(cachedPosts.slice(0, 5));
+			setResults(cachedItems.slice(0, 5));
 			setStatus('success');
 		}
 
@@ -88,21 +90,21 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 	}, [isOpen]);
 
 	useEffect(() => {
-		if (!cachedPosts || status !== 'success' || isComposing) return;
+		if (!cachedItems || status !== 'success' || isComposing) return;
 
 		if (!query.trim()) {
-			setResults(cachedPosts.slice(0, 5));
+			setResults(cachedItems.slice(0, 5));
 			setSelectedIndex(0);
 			return;
 		}
 
 		const version = ++searchVersionRef.current;
-		const posts = cachedPosts;
+		const items = cachedItems;
 
 		const runSearch = async () => {
 			if (!fuseInstance) {
 				const Fuse = (await import('fuse.js')).default;
-				fuseInstance = new Fuse(posts, {
+				fuseInstance = new Fuse(items, {
 					keys: [
 						{ name: 'title', weight: 0.6 },
 						{ name: 'tags', weight: 0.25 },
@@ -122,8 +124,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 	}, [query, status, isComposing]);
 
 	const navigateTo = useCallback(
-		(slug: string) => {
-			router.push(`/blog/${slug}`);
+		(url: string) => {
+			router.push(url);
 			onClose();
 			setQuery('');
 			setResults([]);
@@ -157,7 +159,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 			} else if (e.key === 'Enter') {
 				e.preventDefault();
 				const selected = results[selectedIndex];
-				if (selected) navigateTo(selected.slug);
+				if (selected) navigateTo(selected.url);
 			}
 		};
 
@@ -190,7 +192,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 						<motion.div
 							role='dialog'
 							aria-modal='true'
-							aria-label='搜索'
+							aria-label={pageContent.search.label}
 							className='bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg shadow-2xl w-full max-w-2xl mx-4 max-sm:mx-0 max-sm:h-screen max-sm:rounded-none max-sm:max-w-none'
 							initial={{ opacity: 0, scale: 0.95 }}
 							animate={{
@@ -225,7 +227,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 								<input
 									ref={inputRef}
 									type='text'
-									placeholder='搜索文章...'
+									placeholder={pageContent.search.placeholder}
 									value={query}
 									onChange={(e) => setQuery(e.target.value)}
 									onCompositionStart={() => setIsComposing(true)}
@@ -237,7 +239,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 									}}
 									className='flex-1 bg-transparent text-lg outline-none placeholder:text-gray-400 dark:placeholder:text-gray-600'
 									role='combobox'
-									aria-label='搜索文章'
+									aria-label={pageContent.search.label}
 									aria-expanded={showListbox}
 									aria-controls='search-results'
 									aria-activedescendant={
@@ -254,13 +256,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
 							{status === 'loading' && (
 								<div className='p-8 text-center text-sm text-gray-400'>
-									加载中...
+									{pageContent.search.loading}
 								</div>
 							)}
 
 							{status === 'error' && (
 								<div className='p-8 text-center text-sm text-gray-400'>
-									搜索暂时不可用
+									{pageContent.search.unavailable}
 								</div>
 							)}
 
@@ -275,16 +277,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 											<div className='px-2 py-1 text-xs font-semibold text-primary-500 uppercase tracking-wider mb-1'>
 												CONTENT
 											</div>
-											{results.map((post, index) => (
+											{results.map((item, index) => (
 												<a
-													key={post.slug}
-													href={`/blog/${post.slug}`}
+													key={`${item.type}-${item.url}`}
+													href={item.url}
 													id={`search-option-${index}`}
 													role='option'
 													aria-selected={index === selectedIndex}
 													onClick={(e) => {
 														e.preventDefault();
-														navigateTo(post.slug);
+														navigateTo(item.url);
 													}}
 													onMouseEnter={() => setSelectedIndex(index)}
 													className={`flex items-center justify-between p-3 rounded-md cursor-pointer transition-all duration-150 ease-in-out relative overflow-hidden ${
@@ -297,17 +299,19 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 														<div className='absolute left-0 top-0 bottom-0 w-[3px] bg-primary-500' />
 													)}
 													<span className='text-sm text-gray-900 dark:text-gray-100 truncate flex-1'>
-														{post.title}
+														{item.title}
 													</span>
 													<span className='text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap ml-4'>
-														{post.publishedAt.slice(0, 10)}
+														{item.publishedAt
+															? item.publishedAt.slice(0, 10)
+															: 'Project'}
 													</span>
 												</a>
 											))}
 										</>
 									) : (
 										<div className='p-8 text-center text-sm text-gray-400'>
-											没有找到相关内容
+											{pageContent.search.noResults}
 										</div>
 									)}
 								</div>

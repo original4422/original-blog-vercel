@@ -60,11 +60,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     '@type': 'Person',
     name: siteConfig.name,
     url: SITE_URL,
-    sameAs: ['https://github.com/original4422'],
+    sameAs: [siteConfig.github],
   };
 
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html lang={siteConfig.language} suppressHydrationWarning>
       <body>
         <a className="skip-link" href="#main-content">
           跳到主要内容

@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import matter from 'gray-matter';
+import { projects, siteContent } from '@original/content';
+import { getAllPosts, postBodyForSearch } from '@original/content/server';
 
 const root = process.cwd();
-const postsDir = path.join(root, 'content', 'posts');
 const publicDir = path.join(root, 'public');
 const basePath = (
   process.env.NEXT_PUBLIC_BASE_PATH ?? '/original-blog-pages'
@@ -20,59 +20,14 @@ const escapeXml = (value) =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&apos;');
 
-const files = fs
-  .readdirSync(postsDir)
-  .filter((file) => file.endsWith('.mdx'))
-  .sort();
-
-const posts = files
-  .map((file) => {
-    const slug = file.replace(/\.mdx$/, '');
-    const { data, content } = matter(
-      fs.readFileSync(path.join(postsDir, file), 'utf8'),
-    );
-    return {
-      slug,
-      title: String(data.title),
-      date: String(data.date),
-      summary: String(data.summary),
-      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-      body: content
-        .replace(/```[\s\S]*?```/g, ' ')
-        .replace(/[#>*_`[\]()!-]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .slice(0, 1500),
-    };
-  })
-  .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
-
-const projectSearchItems = [
-  [
-    'signal-atlas',
-    'Signal Atlas',
-    'Turn complex experiments into a map you can actually read.',
-    ['Next.js', 'Research'],
-  ],
-  [
-    'quiet-compute',
-    'Quiet Compute',
-    'A visual notebook for systems that disappear into the background.',
-    ['Systems', 'Observability'],
-  ],
-  [
-    'field-notes',
-    'Field Notes',
-    'Small observations, linked slowly into durable knowledge.',
-    ['MDX', 'Writing'],
-  ],
-  [
-    'original-blog',
-    'original.blog',
-    'A home for work and unfinished ideas.',
-    ['Next.js', 'GitHub Pages'],
-  ],
-];
+const posts = getAllPosts().map((post) => ({
+  slug: post.slug,
+  title: post.metadata.title,
+  date: post.metadata.publishedAt,
+  summary: post.metadata.summary,
+  tags: post.metadata.tags,
+  body: postBodyForSearch(post.content),
+}));
 
 const searchIndex = [
   ...posts.map((post) => ({
@@ -83,19 +38,19 @@ const searchIndex = [
     body: post.body,
     url: `/blog/${post.slug}/`,
   })),
-  ...projectSearchItems.map(([slug, title, summary, tags]) => ({
+  ...projects.map((project) => ({
     type: 'project',
-    title,
-    summary,
-    tags,
-    url: `/projects/${slug}/`,
+    title: project.title,
+    summary: project.summary,
+    tags: project.techStack.flatMap((group) => group.items),
+    url: `/projects/${project.slug}/`,
   })),
 ];
 
 const allTags = [...new Set(posts.flatMap((post) => post.tags))].sort();
 const staticPaths = ['/', '/blog/', '/tags/', '/projects/', '/about/'];
 const articlePaths = posts.map((post) => `/blog/${post.slug}/`);
-const projectPaths = projectSearchItems.map(([slug]) => `/projects/${slug}/`);
+const projectPaths = projects.map((project) => `/projects/${project.slug}/`);
 const tagPaths = allTags.map((tag) => `/tags/${encodeURIComponent(tag)}/`);
 const sitemapPaths = [
   ...staticPaths,
@@ -120,10 +75,10 @@ const rssItems = posts
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-  <title>original</title>
+  <title>${escapeXml(siteContent.name)}</title>
   <link>${siteUrl}/</link>
-  <description>记录代码、系统与持续思考的个人数字花园。</description>
-  <language>zh-CN</language>
+  <description>${escapeXml(siteContent.description)}</description>
+  <language>${escapeXml(siteContent.language)}</language>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${rssItems}
 </channel>
@@ -159,5 +114,5 @@ fs.writeFileSync(
 fs.writeFileSync(path.join(publicDir, '.nojekyll'), '');
 
 console.log(
-  `Generated static assets for ${posts.length} posts, ${allTags.length} tags and ${projectSearchItems.length} projects.`,
+  `Generated static assets for ${posts.length} posts, ${allTags.length} tags and ${projects.length} projects.`,
 );

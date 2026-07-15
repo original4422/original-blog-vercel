@@ -1,15 +1,18 @@
+import { pageContent } from '@original/content';
 import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '../../site.config';
 
 export default function AboutTitle() {
+	const { about } = pageContent;
+
 	return (
 		<article className='mx-auto max-w-2xl'>
 			<div className='mb-8 flex justify-center'>
 				<div className='overflow-hidden rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700'>
 					<Image
-						src='/static/images/avatar.svg'
-						alt='original 的示例头像'
+						src={about.avatar.src}
+						alt={about.avatar.alt}
 						width={128}
 						height={128}
 						priority
@@ -19,12 +22,11 @@ export default function AboutTitle() {
 
 			<section className='mb-10 text-center'>
 				<p className='mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary-500'>
-					About
+					{about.eyebrow}
 				</p>
-				<h1 className='mb-4 text-3xl font-bold'>Hi, there 👋</h1>
+				<h1 className='mb-4 text-3xl font-bold'>{about.title}</h1>
 				<p className='leading-relaxed text-neutral-700 dark:text-neutral-300'>
-					我是 <span className='font-semibold'>original</span>
-					。这是一段可替换的个人简介：可以写你的研究方向、工作、兴趣，或创建这个网站的原因。
+					{about.intro[0]}
 				</p>
 				<div className='mt-6 flex justify-center gap-3'>
 					<Link
@@ -55,9 +57,11 @@ export default function AboutTitle() {
 							{siteConfig.githubHandle}
 						</Link>
 					</li>
-					<li>• Tech Stack：在这里填写你常用的语言、框架与工具</li>
-					<li>• Location：在这里填写城市或 Remote</li>
-					<li>• Interests：技术、开源、写作，以及你真正关心的事</li>
+					{about.profile.map((item) => (
+						<li key={item.label}>
+							• {item.label}：{item.value}
+						</li>
+					))}
 				</ul>
 			</section>
 
@@ -66,9 +70,9 @@ export default function AboutTitle() {
 					Now
 				</h2>
 				<ul className='space-y-3 text-neutral-700 dark:text-neutral-300'>
-					<li>• 正在构建这个个人博客，并整理第一批内容</li>
-					<li>• 持续学习一个值得长期投入的主题</li>
-					<li>• 把想法转化为可被使用的小项目</li>
+					{about.now.map((item) => (
+						<li key={item}>• {item}</li>
+					))}
 				</ul>
 			</section>
 
@@ -76,10 +80,12 @@ export default function AboutTitle() {
 				<h2 className='mb-4 text-lg font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400'>
 					Blog History
 				</h2>
-				<p className='text-neutral-700 dark:text-neutral-300'>
-					<strong>2026：</strong>博客首版上线，使用 Next.js、MDX、GSAP、Motion
-					与 Vercel 构建。
-				</p>
+				{about.history.map((item) => (
+					<p key={item.year} className='text-neutral-700 dark:text-neutral-300'>
+						<strong>{item.year}：</strong>
+						{item.body}
+					</p>
+				))}
 			</section>
 		</article>
 	);

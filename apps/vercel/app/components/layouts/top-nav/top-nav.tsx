@@ -1,5 +1,6 @@
 'use client';
 
+import { siteContent } from '@original/content';
 import classNames from 'classnames';
 import { motion } from 'motion/react';
 import Link from 'next/link';
@@ -11,13 +12,6 @@ import { MoonIcon } from '../icons/moon-icon';
 import { SearchIcon } from '../icons/search-icon';
 import { SunMediumIcon } from '../icons/sun-icon';
 import SearchModal from '../search-modal/search-modal';
-
-const navItems = [
-	{ href: '/blog', label: 'Blog' },
-	{ href: '/tags', label: 'Tags' },
-	{ href: '/projects', label: 'Projects' },
-	{ href: '/about', label: 'About' },
-];
 
 export default function TopNav() {
 	const [mounted, setMounted] = useState(false);
@@ -82,7 +76,7 @@ export default function TopNav() {
 				<div className='mx-auto w-full max-w-5xl px-8 md:px-18'>
 					<div className='relative flex h-16 items-center justify-center'>
 						<div className='hidden items-center gap-1 md:flex'>
-							{navItems.map((item) => (
+							{siteContent.navigation.map((item) => (
 								<Link
 									key={item.href}
 									href={item.href}
@@ -158,7 +152,7 @@ export default function TopNav() {
 					</div>
 
 					<div className='flex gap-4 overflow-x-auto pb-3 md:hidden'>
-						{navItems.map((item) => (
+						{siteContent.navigation.map((item) => (
 							<Link
 								key={item.href}
 								href={item.href}

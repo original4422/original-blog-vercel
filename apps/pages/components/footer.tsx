@@ -1,3 +1,4 @@
+import { pageContent } from '@original/content';
 import Link from 'next/link';
 import { siteConfig, withBasePath } from '@/data/site';
 
@@ -7,7 +8,7 @@ export function Footer() {
       <Link href="/" className="footer-signature display">
         original<span>.</span>
       </Link>
-      <p>Small notes, built to last.</p>
+      <p>{pageContent.footer.tagline}</p>
       <div className="footer-links">
         {siteConfig.socials.map((item) => (
           <a key={item.label} href={item.href} rel="noreferrer">
@@ -16,7 +17,10 @@ export function Footer() {
         ))}
         <a href={withBasePath('/feed.xml')}>RSS</a>
       </div>
-      <small>© {new Date().getFullYear()} original · Example content</small>
+      <small>
+        © {new Date().getFullYear()} {siteConfig.name} ·{' '}
+        {pageContent.footer.copyrightSuffix}
+      </small>
     </footer>
   );
 }

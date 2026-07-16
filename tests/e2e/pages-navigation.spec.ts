@@ -105,3 +105,23 @@ test('@desktop desktop navigation is visible without a menu button', async ({
 	}
 	expect(errors).toEqual([]);
 });
+
+test('@mobile article code blocks do not widen the page', async ({ page }) => {
+	for (const viewport of [
+		{ width: 320, height: 568 },
+		{ width: 390, height: 844 },
+	]) {
+		await page.setViewportSize(viewport);
+		await page.goto('./blog/vercel-pages-monorepo-guide/');
+
+		const dimensions = await page.locator('html').evaluate((element) => ({
+			clientWidth: element.clientWidth,
+			scrollWidth: element.scrollWidth,
+		}));
+		expect(dimensions.scrollWidth).toBe(dimensions.clientWidth);
+
+		const codeBlock = page.locator('.prose pre').first();
+		await expect(codeBlock).toBeVisible();
+		await expect(codeBlock).toHaveCSS('overflow-x', 'auto');
+	}
+});

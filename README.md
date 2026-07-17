@@ -46,9 +46,9 @@ pnpm preview:pages
 
 - Vercel 主站：<https://original-blog-vercel.vercel.app/>
 - Pages 温备站：<https://original4422.github.io/original-blog/>
-- 待归档的旧 Pages：<https://original4422.github.io/original-blog-pages/>
+- 已归档的旧 Pages（历史只读）：<https://original4422.github.io/original-blog-pages/>
 
-域名方案暂缓。新 Pages 已完成访问、内容一致性、移动导航和人工恢复演练；旧 Pages 仓库仍保持在线，只有在一次真实公开内容变更完成双部署并经过观察窗后才归档。
+域名方案暂缓。新 Pages 已完成访问、内容一致性、移动导航、人工恢复演练和一次真实内容变更的 24 小时观察。旧 `original-blog-pages` 仓库已于 2026-07-17 归档，代码、tag、Actions 历史和旧站点均保留，但它不再是活动发布目标，也不承担 RPO 0 温备职责。观察证据见 [真实内容发布观察记录](docs/migration/content-release-observation-2026-07-16.md)。
 
 ## 文档入口
 

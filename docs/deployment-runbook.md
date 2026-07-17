@@ -8,9 +8,9 @@
 | --- | --- | --- | --- |
 | 主站 | `apps/vercel` | Vercel | `https://original-blog-vercel.vercel.app/` |
 | 温备站 | `apps/pages` | GitHub Pages | `https://original4422.github.io/original-blog/` |
-| 待归档的旧 Pages | 独立旧仓库 | GitHub Pages | `https://original4422.github.io/original-blog-pages/` |
+| 已归档的旧 Pages | 独立旧仓库（历史只读） | GitHub Pages | `https://original4422.github.io/original-blog-pages/` |
 
-当前没有自定义域名。新 Pages 已于 2026-07-16 完成生产访问、内容一致性、移动导航和人工恢复演练；旧 Pages 仍保持在线，只有在一次真实公开内容变更完成双部署并经过观察窗后才归档。
+当前没有自定义域名。新 Pages 已完成生产访问、内容一致性、移动导航、人工恢复演练和一次真实内容变更的 24 小时观察。旧 `original-blog-pages` 仓库已于 2026-07-17 归档；旧站仍可访问，但只用于保留历史证据，不再接收发布，也不计入当前 RPO 0 温备链路。
 
 公开语义内容只允许在 `packages/content` 中维护。`apps/vercel` 与 `apps/pages` 可以使用不同组件、布局和平台能力，但不得分别维护文章、项目、身份或页面正文副本。
 
@@ -33,7 +33,7 @@ pnpm test:e2e
 期望结果：
 
 - 两套应用均完成生产构建；
-- Pages 导出 24 条公开路由、8 条搜索记录和 11 个标签页；
+- Pages 导出 30 条公开路由、10 条搜索记录和 15 个标签页；
 - 320×568、390×844 与 1280×800 导航回归通过；
 - `apps/vercel/public/version.json` 与 `apps/pages/out/version.json` 指向同一提交；
 - 仓库中只有一个 `pnpm-lock.yaml`。
@@ -146,10 +146,19 @@ Pages 的 HTML、CSS、JavaScript、图片和内部链接都必须带 `/original
 
 最近一次不制造真实故障的人工切换演练记录见 [`migration/recovery-drill-2026-07-16.md`](migration/recovery-drill-2026-07-16.md)。演练只验证技术链路和通知文案准备，不把真实主站下线，也不向外部渠道发送测试通知。
 
+真实内容变更、双端发布、移动溢出修复和 24 小时观察结果见 [`migration/content-release-observation-2026-07-16.md`](migration/content-release-observation-2026-07-16.md)。该门禁通过后，旧仓库以原仓库 ID 归档，分支、tag、Actions 历史和公开旧站均保留。
+
+## 已归档旧 Pages 的边界
+
+- 旧仓库 `original4422/original-blog-pages` 是历史证据，不是当前内容源或发布目标；
+- 不向已归档仓库提交内容，不把旧站版本计入当前双端新鲜度判断；
+- 旧站即使仍返回 200，也不保证包含 `main` 的最后一个已发布版本，因此不能满足 RPO 0；
+- 只有在明确的故障处置或历史修复决策下才可临时解除归档，操作前后都要记录原因、版本和验证结果。
+
 ## 回退边界
 
 - Vercel 迁移失败：保留并恢复到迁移前 tag `pre-monorepo-vercel-2026-07-15` 对应的已知良好 deployment；
-- 新 Pages 失败：旧 `original-blog-pages` 继续在线，不归档旧仓库；
+- 新 Pages 失败：优先恢复 `original-blog` 仓库对应的最后一个已知良好 Pages deployment；已归档旧站只能作为明确标注版本落后的历史入口，不能冒充 RPO 0 温备；
 - 工作流配置错误：修复后提交新 SHA，不修改或伪造已发布版本文件；
 - 两个线上版本不一致：以 `main` 的当前生产意图和 `/version.json` 为证据，等待或重新触发对应平台部署。
 
@@ -165,4 +174,4 @@ Pages workflow run / deployment URL / version.json:
 故障或回退记录:
 ```
 
-只有 CI、两个平台部署、公开访问矩阵、版本新鲜度和浏览器复检都对应同一目标提交时，才可以宣称该次双版本发布通过生产验收。异地 Git 镜像和旧 Pages 归档仍按各自门禁单独验收。
+只有 CI、两个平台部署、公开访问矩阵、版本新鲜度和浏览器复检都对应同一目标提交时，才可以宣称该次双版本发布通过生产验收。旧 Pages 归档门禁已经完成；异地 Git 镜像仍需按独立门禁建设和验收。

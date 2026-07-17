@@ -2,11 +2,13 @@
 
 ## 状态
 
-- 当前状态：观察中
+- 当前状态：已完成
 - 时区：Asia/Shanghai（UTC+8）
 - 观察开始：2026-07-16 23:00:19
 - 最早关闭：2026-07-17 23:00:19
-- 旧仓库：`original4422/original-blog-pages` 保持 `archived=false`
+- 实际关闭：2026-07-17 23:50:28
+- 持续时间：24 小时 50 分 09 秒
+- 旧仓库：`original4422/original-blog-pages` 已归档
 
 本记录用于证明一次真实公开内容变更能够从单一内容源同时进入 Vercel 主站与 GitHub Pages 温备站，并在观察窗内持续可用。观察窗结束前不归档旧 Pages 仓库。
 
@@ -46,6 +48,12 @@
 - [Pages run 29508856238](https://github.com/original4422/original-blog/actions/runs/29508856238)：success
 - [新鲜度 run 29508856359](https://github.com/original4422/original-blog/actions/runs/29508856359)：success
 
+### 观察记录提交 `2ebfe65`
+
+- [CI run 29509271131](https://github.com/original4422/original-blog/actions/runs/29509271131)：success
+- [Pages run 29509270822](https://github.com/original4422/original-blog/actions/runs/29509270822)：success
+- [新鲜度 run 29509269723](https://github.com/original4422/original-blog/actions/runs/29509269723)：success
+
 ## 观察窗前即时验收
 
 | 检查项 | 结果 |
@@ -65,16 +73,28 @@
 
 ## 观察窗关闭条件
 
-以下条件须在 2026-07-17 23:00:19 之后重新检查并记录：
+以下条件已在 2026-07-17 23:00:19 之后重新检查：
 
-- [ ] `origin/main`、Vercel 与 Pages 指向同一已发布提交。
-- [ ] 两篇文章和四张共享媒体仍可访问。
-- [ ] 两端 Feed、Sitemap 与搜索索引仍包含两个新 slug。
-- [ ] Vercel Web Analytics 脚本仍可访问，生产浏览器无关键错误。
-- [ ] 本观察窗相关的 CI、Pages 与新鲜度自动化没有失败。
-- [ ] 旧 Pages 仓库在全部检查通过前始终保持未归档。
-- [ ] 通过上述门禁后归档旧仓库，不删除仓库、tags、Actions 或历史。
+- [x] `origin/main`、Vercel 与 Pages 均指向 `2ebfe65fe81a52d8bd589c01a56f252b7699d64e`。
+- [x] 两篇文章的四个公开入口和四张共享媒体的八个请求仍可访问。
+- [x] 两端 Feed、Sitemap 与搜索索引仍包含两个新 slug。
+- [x] Vercel Web Analytics 脚本仍为 200，生产浏览器无关键错误。
+- [x] 本观察窗相关的 CI、Pages 与新鲜度自动化全部成功。
+- [x] 旧 Pages 仓库在全部检查通过前始终保持未归档，归档前旧站为 200。
+- [x] 通过上述门禁后归档旧仓库，没有删除仓库、tag、Actions 或历史。
 
 ## 最终结果
 
-待 24 小时观察窗结束后填写。
+最终门禁在 1280×800、390×844 和 320×568 三种视口检查两篇文章的两个生产版本，共 12 个浏览器组合。所有页面最终响应 200，无页面级横向溢出；正文图片全部解码；控制台与页面错误为空。四张共享媒体在两端的类型和字节数一致，未知媒体路径保持 404。
+
+旧仓库归档结果：
+
+- 仓库 ID：`1296878185`；
+- `archived=true`，`disabled=false`，默认分支仍为 `main`；
+- 1 个分支、1 个 tag 和 4 条 Actions 运行记录仍可读取；
+- 旧 Pages 地址在归档后仍返回 200；
+- 归档后 Vercel 与新 Pages 的 `/version.json` 仍共同指向 `2ebfe65`。
+
+原计划的一次性 Codex 复查因 RRULE 小时被按 UTC 解释而未在北京时间 23:05 触发。该错误配置已移除，数据库中没有执行记录；最终复查由用户在观察窗到期后明确要求人工执行。调度错误没有改变部署状态，且旧仓库直到全部人工门禁通过后才归档。
+
+Task 9.4 至此完成。异地 Git 镜像属于后续独立任务，不因本次归档自动完成。
